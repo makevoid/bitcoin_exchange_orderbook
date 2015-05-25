@@ -23,18 +23,18 @@ def matchLedgers(order):
         matchLedgerBuy(order)
 
 def matchLedgerSell(order, sellLedger, buyLedger): # order is buy
-    lastMatchingOrderDepthPrice  = lastMatchingOrderDepthPriceSell(order["price"])
+    lastMatchingOrderDepthPrice  = lastMatchingOrderDepthPriceSell(order["price"], sellLedger)
     lastMatchingOrderDepthAmount, amountMatched = lastMatchingOrderDepthAmountSell(order["amount"], sellLedger)
 
 
     if lastMatchingOrderDepthPrice < lastMatchingOrderDepthAmount:
-        priceSell = findPriceSell(lastMatchingOrderDepthPrice)
+        priceSell = findPriceSell(lastMatchingOrderDepthPrice, sellLedger)
 
-        newOrder = order
+        newOrder = order.clone()
         newOrder["amount"] = order["amount"] - amountMatched
 
         resolvedOrders = sellLedger[0:lastMatchingOrderDepthAmount]
-        partialResolvedOrder = order
+        partialResolvedOrder = order.clone()
         partialResolvedOrder["price"]  = priceSell
         partialResolvedOrder["amount"] = amountMatched
         sellLedger = sellLedger[lastMatchingOrderDepthAmount:]
@@ -54,7 +54,7 @@ def matchLedgerSell(order, sellLedger, buyLedger): # order is buy
     # if order["amount"]
 
 
-def findPriceSell(depth):
+def findPriceSell(depth, sellLedger):
     amountTotal = 0
     priceTotal  = 0
 
@@ -63,18 +63,20 @@ def findPriceSell(depth):
             priceTotal  += order["price"] * order["amount"]
             amountTotal += order["amount"]
 
+    print priceTotal, amountTotal
     return priceTotal / amountTotal
 
 def findPriceBuy(depth):
     # TODO ....
     return true
 
-def lastMatchingOrderDepthPriceSell(price):
+
+def lastMatchingOrderDepthPriceSell(price, sellLedger):
     for index, order in enumerate(sellLedger):
         if order["price"] > price:
             return index
 
-def lastMatchingOrderDepthPriceBuy(price):
+def lastMatchingOrderDepthPriceBuy(price, sellLedger):
     for index, order in enumerate(sellLedger):
         if order["price"] < price:
             return index
@@ -88,7 +90,7 @@ def lastMatchingOrderDepthAmountSell(amount, sellLedger):
         if amountMatched > amount:
             return index, (amountMatched - order["amount"])
 
-def lastMatchingOrderDepthAmountBuy(amount):
+def lastMatchingOrderDepthAmountBuy(amount, sellLedger):
     amountMatched = 0
     for index, order in enumerate(buyLedger):
         amountMatched += order["amount"]

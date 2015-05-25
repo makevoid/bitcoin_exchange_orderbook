@@ -40,10 +40,10 @@ class matchLedgers(unittest.TestCase):
         knownValues = self.generateValues()
         for index, input_ in enumerate(knownValues["inputs"]):
             resolvedOrders, partialResolvedOrder, sellLedger, buyLedger = orderbook.matchLedgerSell(input_[0], input_[1], input_[2])
-            assertEquals(knownValues[index][0], resolvedOrders)
-            assertEquals(knownValues[index][1], partialResolvedOrder)
-            assertEquals(knownValues[index][2], sellLedger)
-            assertEquals(knownValues[index][3], buyLedger)
+            self.assertEquals(knownValues["results"][index][0], resolvedOrders)
+            self.assertEquals(knownValues["results"][index][1], partialResolvedOrder)
+            self.assertEquals(knownValues["results"][index][2], sellLedger)
+            self.assertEquals(knownValues["results"][index][3], buyLedger)
 
 if __name__ == "__main__":
     unittest.main()
