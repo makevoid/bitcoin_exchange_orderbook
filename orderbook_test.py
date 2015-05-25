@@ -22,7 +22,7 @@ class matchLedgers(unittest.TestCase):
         ]
         partialResolvedOrder = { "id": 1, "user_id": 1,  "type": "buy", "amount": 5000, "price": 20500, "time": datetime.datetime.now() }
         sellLedgerResult  = [order3]
-        buyOrderNew = order
+        buyOrderNew = order.copy()
         buyOrderNew["amount"] = 5000
         buyLedger   = [buyOrderNew]
 
@@ -39,7 +39,6 @@ class matchLedgers(unittest.TestCase):
     def testRightInput(self):
         knownValues = self.generateValues()
         for index, input_ in enumerate(knownValues["inputs"]):
-            # print input_
             resolvedOrders, partialResolvedOrder, sellLedger, buyLedger = orderbook.matchLedgerSell(input_[0], input_[1], input_[2])
             assertEquals(knownValues[index][0], resolvedOrders)
             assertEquals(knownValues[index][1], partialResolvedOrder)

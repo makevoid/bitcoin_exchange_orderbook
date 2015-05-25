@@ -24,9 +24,7 @@ def matchLedgers(order):
 
 def matchLedgerSell(order, sellLedger, buyLedger): # order is buy
     lastMatchingOrderDepthPrice  = lastMatchingOrderDepthPriceSell(order["price"])
-    # print order
-    # print order.__class__
-    lastMatchingOrderDepthAmount, amountMatched = lastMatchingOrderDepthAmountSell(order["amount"])
+    lastMatchingOrderDepthAmount, amountMatched = lastMatchingOrderDepthAmountSell(order["amount"], sellLedger)
 
 
     if lastMatchingOrderDepthPrice < lastMatchingOrderDepthAmount:
@@ -83,12 +81,11 @@ def lastMatchingOrderDepthPriceBuy(price):
 
 
 # TODO: refactor these two, pass the ledger as a parameter then they're identical
-def lastMatchingOrderDepthAmountSell(amount):
+def lastMatchingOrderDepthAmountSell(amount, sellLedger):
     amountMatched = 0
     for index, order in enumerate(sellLedger):
         amountMatched += order["amount"]
         if amountMatched > amount:
-            print  index, (amountMatched - order["amount"])
             return index, (amountMatched - order["amount"])
 
 def lastMatchingOrderDepthAmountBuy(amount):
