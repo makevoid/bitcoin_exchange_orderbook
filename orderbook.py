@@ -11,7 +11,7 @@ sellLedger = []
 # main
 
 def main():
-    order = { "id": 1, "user_id": 1,  "type": "sell", "amount": 10000, "price": 20000, "time": datetime.datetime.now() }
+    order = { "id": 1, "user_id": 1,  "type": "sell", "amount": 10000, "price": 20000 }
     matchLedgers(order)
 
 
@@ -26,20 +26,18 @@ def matchLedgerSell(order, sellLedger, buyLedger): # order is buy
     lastMatchingOrderDepthPrice  = lastMatchingOrderDepthPriceSell(order["price"], sellLedger)
     lastMatchingOrderDepthAmount, amountMatched = lastMatchingOrderDepthAmountSell(order["amount"], sellLedger)
 
-
+    # print lastMatchingOrderDepthPrice, lastMatchingOrderDepthAmount
     if lastMatchingOrderDepthPrice < lastMatchingOrderDepthAmount:
         priceSell = findPriceSell(lastMatchingOrderDepthPrice, sellLedger)
-
-        newOrder = order.clone()
+        newOrder = order.copy()
         newOrder["amount"] = order["amount"] - amountMatched
-
+        print amountMatched
         resolvedOrders = sellLedger[0:lastMatchingOrderDepthAmount]
-        partialResolvedOrder = order.clone()
+        partialResolvedOrder = order.copy()
         partialResolvedOrder["price"]  = priceSell
         partialResolvedOrder["amount"] = amountMatched
         sellLedger = sellLedger[lastMatchingOrderDepthAmount:]
-        buyLedger  = buyLedger.insert(0, newOrder)
-
+        buyLedger.insert(0, newOrder)
         return resolvedOrders, partialResolvedOrder, sellLedger, buyLedger
 
     elif lastMatchingOrderDepthPrice == lastMatchingOrderDepthAmount:
@@ -63,7 +61,7 @@ def findPriceSell(depth, sellLedger):
             priceTotal  += order["price"] * order["amount"]
             amountTotal += order["amount"]
 
-    print priceTotal, amountTotal
+    # print priceTotal, amountTotal
     return priceTotal / amountTotal
 
 def findPriceBuy(depth):
@@ -74,7 +72,7 @@ def findPriceBuy(depth):
 def lastMatchingOrderDepthPriceSell(price, sellLedger):
     for index, order in enumerate(sellLedger):
         if order["price"] > price:
-            return index
+            return index -1
 
 def lastMatchingOrderDepthPriceBuy(price, sellLedger):
     for index, order in enumerate(sellLedger):

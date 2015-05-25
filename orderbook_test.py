@@ -6,35 +6,38 @@ import orderbook
 buyLedger  = []
 sellLedger = []
 
-order1 = { "id": 1, "user_id": 1,  "type": "sell", "amount": 10000, "price": 20000, "time": datetime.datetime.now() }
+order1 = { "id": 1, "user_id": 1,  "type": "sell", "amount": 10000, "price": 20000}
 sellLedger.append(order1)
-order2 = { "id": 1, "user_id": 1,  "type": "sell", "amount": 10000, "price": 21000, "time": datetime.datetime.now() }
+order2 = { "id": 1, "user_id": 1,  "type": "sell", "amount": 10000, "price": 21000}
 sellLedger.append(order2)
-order3 = { "id": 1, "user_id": 1,  "type": "sell", "amount": 10000, "price": 22000, "time": datetime.datetime.now() }
+order3 = { "id": 1, "user_id": 1,  "type": "sell", "amount": 10000, "price": 22000}
 sellLedger.append(order3)
 
 
 class matchLedgers(unittest.TestCase):
     def generateValues(self):
-        order          = { "id": 1, "user_id": 1,  "type": "buy", "amount": 25000, "price": 21000, "time": datetime.datetime.now() }
+        order          = { "id": 1, "user_id": 1,  "type": "buy", "amount": 25000, "price": 21000}
         resolvedOrders = [
             order1, order2
         ]
-        partialResolvedOrder = { "id": 1, "user_id": 1,  "type": "buy", "amount": 5000, "price": 20500, "time": datetime.datetime.now() }
+        partialResolvedOrder = { "id": 1, "user_id": 1,  "type": "buy", "amount": 20000, "price": 20500}
         sellLedgerResult  = [order3]
         buyOrderNew = order.copy()
         buyOrderNew["amount"] = 5000
-        buyLedger   = [buyOrderNew]
+        buyLedgerResult   = [buyOrderNew]
 
         knownValues = {
             'inputs':  [
                 [order, sellLedger, buyLedger]
             ],
             'results': [
-                [resolvedOrders, partialResolvedOrder, sellLedgerResult, buyLedger]
+                [resolvedOrders, partialResolvedOrder, sellLedgerResult, buyLedgerResult]
             ]
         }
         return knownValues
+
+    def assertEqualsPretty(expectedResult, result):
+        return self.assertEquals( expectedResult, result, msg='\n{0}\n-----\n{1}'.format(expectedResult, result) )
 
     def testRightInput(self):
         knownValues = self.generateValues()
