@@ -1,49 +1,32 @@
 import datetime
 
-# models
-
 # order
 # order_fields = ["id", "user_id",  :type, :amount, :price, "time", "resolved"]
-
-                                                        # statoshi -       fiat/cent
-# order = { "id": 1, "user_id": 1,  "type": "buy", "amount": 10000, "price": 20000, "time": datetime.datetime.now() }
-
-# order["asd"] # => "lol"
 
 # initial state
 buyLedger = []
 sellLedger = []
 
 
-# active exchange example state
-buyLedger = []
-sellLedger = []
+# main
 
-order = { "id": 1, "user_id": 1,  "type": "buy", "amount": 10000, "price": 20000, "time": datetime.datetime.now() }
-buyLedger.append(order)
-order = { "id": 1, "user_id": 1,  "type": "buy", "amount": 10000, "price": 20000, "time": datetime.datetime.now() }
-buyLedger.append(order)
-
-
-
-
-
-order = { "id": 1, "user_id": 1,  "type": "sell", "amount": 10000, "price": 20000, "time": datetime.datetime.now() }
-matchLedgers(order)
-
-
+def main():
+    order = { "id": 1, "user_id": 1,  "type": "sell", "amount": 10000, "price": 20000, "time": datetime.datetime.now() }
+    matchLedgers(order)
 
 
 # TODO: gestione errore esterna a questa funzione
 def matchLedgers(order):
     if order["type"] == "buy":
-        resolvedOrders, partialResolvedOrder, sellLedger, buyLedger = matchLedgerSell(order)
+        resolvedOrders, partialResolvedOrder, sellLedger, buyLedger = matchLedgerSell(order, sellLedger, buyLedger)
     else:
         matchLedgerBuy(order)
 
-def matchLedgerSell(order): # order is buy
-    lastMatchingOrderDepthPrice  = lastMatchingOrderDepthPriceSell  order.price
-    lastMatchingOrderDepthAmount, amountMatched = lastMatchingOrderDepthAmountSell order.amount
+def matchLedgerSell(order, sellLedger, buyLedger): # order is buy
+    lastMatchingOrderDepthPrice  = lastMatchingOrderDepthPriceSell(order["price"])
+    # print order
+    # print order.__class__
+    lastMatchingOrderDepthAmount, amountMatched = lastMatchingOrderDepthAmountSell(order["amount"])
 
 
     if lastMatchingOrderDepthPrice < lastMatchingOrderDepthAmount:
@@ -62,8 +45,12 @@ def matchLedgerSell(order): # order is buy
         return resolvedOrders, partialResolvedOrder, sellLedger, buyLedger
 
     elif lastMatchingOrderDepthPrice == lastMatchingOrderDepthAmount:
+        # return resolvedOrders, partialResolvedOrder, sellLedger, buyLedger
+        return False, False, sellLedger, buyLedger
 
-    else: # >
+    else: # lastMatchingOrderDepthPrice > lastMatchingOrderDepthAmount:
+        # return resolvedOrders, partialResolvedOrder, sellLedger, buyLedger
+        return False, False, sellLedger, buyLedger
         # ... non ce ne po frega de meno
 
     # if order["amount"]
@@ -82,15 +69,16 @@ def findPriceSell(depth):
 
 def findPriceBuy(depth):
     # TODO ....
+    return true
 
-def lastMatchingOrderDepthSell(price):
+def lastMatchingOrderDepthPriceSell(price):
     for index, order in enumerate(sellLedger):
-        if order.price > price
+        if order["price"] > price:
             return index
 
-def lastMatchingOrderDepthBuy(price):
+def lastMatchingOrderDepthPriceBuy(price):
     for index, order in enumerate(sellLedger):
-        if order.price < price
+        if order["price"] < price:
             return index
 
 
@@ -98,26 +86,14 @@ def lastMatchingOrderDepthBuy(price):
 def lastMatchingOrderDepthAmountSell(amount):
     amountMatched = 0
     for index, order in enumerate(sellLedger):
-        amountMatched += order.amount
-        if amountMatched > amount
-            return index, amountMatched-order.amount
+        amountMatched += order["amount"]
+        if amountMatched > amount:
+            print  index, (amountMatched - order["amount"])
+            return index, (amountMatched - order["amount"])
 
 def lastMatchingOrderDepthAmountBuy(amount):
     amountMatched = 0
     for index, order in enumerate(buyLedger):
-        amountMatched += order.amount
-        if amountMatched > amount
-            return index, amountMatched-order.amount
-
-
-
-#, buyLedger)
-
-# resolve_order
-
-if
-
-
-
-
-print order#type
+        amountMatched += order["amount"]
+        if amountMatched > amount:
+            return index, (amountMatched - order["amount"])
